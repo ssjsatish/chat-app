@@ -7,28 +7,43 @@ class Register extends React.Component {
         username: '',
         email: '',
         password: '',
-        passwordConfirmation: ''
+        passwordConfirmation: '',
+        errors: []
     }
-    isFormEmpty = () => {
-        return true;
-    }
-
-    isPasswordValid = () => {
-
-        return true;
-    }
-
     isFormValid = () => {
-        return true;
-        // if(this.isFormEmpty(this.state)) {
-        //     //throw error
-        // } else if(!this.isPasswordValid()) {
+        let errors = [];
+        let error;
+        if(this.isFormEmpty(this.state)) {
+            error = { message: 'Fill in all fields'};
+            this.setState({errors: errors.concat(error) });
+            return false;
+        } else if(!this.isPasswordValid(this.state)) {
+            error = { message: 'Password is not valid'};
+            this.setState({ errors: errors.concat(error) });
+            return false;
 
-        // } else {
-        //     // form is valid
-        //     return true;
-        // }
+        } else {
+            // form is valid
+            return true;
+        }
     }
+    isFormEmpty = ({username, email, password, passwordConfirmation}) => {
+        return !username.length || !email.length || !password.length || !passwordConfirmation.length;
+    }
+
+    isPasswordValid = ({password, passwordConfirmation}) => {
+        if(password.length < 6 || passwordConfirmation.length < 6) {
+            return false;
+        }
+        else if(password !== passwordConfirmation) {
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+
+    
     handleChange = event => {
         this.setState({ [event.target.name]: event.target.value });
     }
